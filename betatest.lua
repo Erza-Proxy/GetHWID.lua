@@ -1,37 +1,40 @@
--- Minimal Lua fetcher for mobile proxy
+from flask import Flask, request, Response
+import os
 
-local version = "mp"  -- or "betacp"
-local url = "https://erza.pythonanywhere.com/get_lua_file?version=" .. version
+app = Flask(__name__)
 
--- Make the HTTP request
-local res_obj = makeRequest(
-    url,
-    "GET",
-    { {"User-Agent", "ErzaProxyOnTop"} },
-    "",
-    5000
-)
+BASE_DIR = '/home/Erza/mysite/ErzaFiles/'
 
--- Debug: log HTTP response length and content (short preview)
-logToConsole("HTTP response length: " .. tostring(#res_obj.content))
-logToConsole("HTTP response preview: " .. tostring(res_obj.content:sub(1, 50)))
+# Map version names to Lua files
+VERSION_MAP = {
+    'v1': BASE_DIR + 'v1proxy.lua',
+    'v2': BASE_DIR + 'v2proxy.lua',
+    'v3': BASE_DIR + 'v3proxy.lua',
+    'mp': BASE_DIR + 'mobileproxy.lua',
+    'betacp': BASE_DIR + 'betacp.lua',
+    'betatest': BASE_DIR + 'betatest.lua',
+}
 
--- Check response
-if res_obj.content and #res_obj.content > 0 then
-    if res_obj.content:find("Unauthorized") then
-        logToConsole("[ERROR] Unauthorized: check User-Agent or version")
-    elseif res_obj.content:find("File not found") then
-        logToConsole("[ERROR] File not found on server")
-    else
-        -- Attempt to load Lua code
-        local fn, err = load(res_obj.content)
-        if fn then
-            fn()  -- run the Lua code
-            logToConsole("[INFO] Lua code loaded successfully")
-        else
-            logToConsole("[ERROR] Failed to load Lua code: " .. tostring(err))
-        end
-    end
-else
-    logToConsole("[ERROR] Empty response from server")
-end
+@app.route('/get_lua_file')
+def get_lua_file():
+    version = request.args.get('version')
+    ua = request.headers.get('User-Agent', '')
+
+    # Debug logs
+    print(f"[DEBUG] Request for version: {version}, User-Agent: {ua}")
+
+    if ua == "ErzaProxyOnTop" and version in VERSION_MAP:
+        file_path = VERSION_MAP[version]
+        if not os.path.exists(file_path):
+            print(f"[DEBUG] File not found for version: {version}")
+            return "File not found", 404
+        with open(file_path, 'r') as f:
+            content = f.read()
+            print(f"[DEBUG] Serving file {file_path}, length: {len(content)}")
+            return Response(content, content_type='text/plain')
+
+    print(f"[DEBUG] Unauthorized access attempt for version: {version} with User-Agent: {ua}")
+    return "Unauthorized", 403
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
