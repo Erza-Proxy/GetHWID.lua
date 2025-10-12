@@ -1,3 +1,4 @@
+-- Helper to display overlay
 function OnTextOverlay(text)
     sendVariant({
         [0] = "OnTextOverlay",
@@ -5,95 +6,73 @@ function OnTextOverlay(text)
     }, -1, 0)
 end
 
--- Helper to log errors
-local function logError(msg)
-    logToConsole("`4[ERROR] `0" .. msg)
-    OnTextOverlay("`4[ERROR] `0" .. msg)
-end
-
--- Get Discord ID (used as HWID)
+-- Get Discord ID as HWID
 local discord_id = getDiscordID()
 
--- Fetch the HWID table from raw GitHub link
+-- Fetch the HWID table from raw GitHub
 local hwid_url = "https://raw.githubusercontent.com/Erza-Proxy/GetHWID.lua/refs/heads/main/CPHWID.lua"
-local res_response = makeRequest(hwid_url, "GET", {}, "", 5000)
-local res = res_response and res_response.content
+local res_table = makeRequest(hwid_url, "GET", {}, "", 5000).content
 
-if not res or res == "" then
-    logError("No response from HWID API")
+if not res_table or res_table == "" then
+    OnTextOverlay("`4[ERROR] `0Failed to fetch HWID table")
+    logToConsole("[ERROR] Failed to fetch HWID table")
     return
 end
 
--- Load HWID table safely
-local fn, err = load(res)
-if not fn then
-    logError("Failed to load HWID table: " .. tostring(err))
+-- Load the table safely
+local hwid_table
+local fn, err = load(res_table)
+if fn then
+    hwid_table = fn()
+else
+    OnTextOverlay("`4[ERROR] `0Failed to load HWID table: " .. tostring(err))
+    logToConsole("[ERROR] Failed to load HWID table: " .. tostring(err))
     return
 end
 
-local hwid_table = fn()
-if type(hwid_table) ~= "table" then
-    logError("HWID table is invalid")
-    return
-end
-
--- Check HWID in table
+-- Get the HWID entry
 local entry = hwid_table[discord_id]
 if not entry then
-    logError("Discord ID not found")
+    OnTextOverlay("`4[ERROR] `0Discord ID not found")
+    logToConsole("[ERROR] Discord ID not found in HWID table")
     return
 end
 
--- Check expiration
+-- Check expiration (timestamps in ms)
 local function isExpired(expires)
     if not expires then return false end
-    local current_time = getCurrentTimeInternal() -- milliseconds
-    return current_time > expires
+    return getCurrentTimeInternal() > tonumber(expires)
 end
 
 if isExpired(entry.expires) then
-    logError("Proxy expired")
+    OnTextOverlay("`4[ERROR] `0Proxy expired")
+    logToConsole("[ERROR] Proxy expired for this HWID")
     return
 end
 
--- Only support "mp" and "betatest"
-local version_map = {
-    mp = "mp",
-    betatest = "betatest",
-    hoster = "mp", -- map "Hoster" to mp (or betatest if you prefer)
-}
-
-local version = version_map[entry.version:lower()]
-if not version then
-    logError("Unsupported proxy version: " .. tostring(entry.version))
+-- Only allow "mp" or "betatest"
+local version = entry.version:lower()
+if version ~= "mp" and version ~= "betatest" then
+    OnTextOverlay("`4[ERROR] `0Unsupported proxy version: " .. entry.version)
+    logToConsole("[ERROR] Unsupported proxy version: " .. entry.version)
     return
 end
 
--- Fetch Lua script for this version using makeRequest
-local lua_response = makeRequest(
-    "https://erza.pythonanywhere.com/get_lua_file?version=" .. version,
-    "GET",
-    { "User-Agent: ErzaProxyOnTop" },
-    "",
-    5000
-)
-local code = lua_response and lua_response.content
+-- Fetch the actual Lua code from your server
+local lua_url = "https://erza.yourserver.com/get_lua_file?version=" .. version
+local lua_code = makeRequest(lua_url, "GET", {{"User-Agent", "ErzaProxyOnTop"}}, "", 5000).content
 
-if not code or code == "" then
-    logError("Failed to retrieve Lua code from server")
+if not lua_code or lua_code == "" then
+    OnTextOverlay("`4[ERROR] `0Failed to fetch Lua code for version: " .. version)
+    logToConsole("[ERROR] Failed to fetch Lua code for version: " .. version)
     return
 end
 
-if code:find("Unauthorized") then
-    logError("Unauthorized: Your HWID is not registered for " .. version)
-    return
+-- Run the Lua code safely
+local fn_code, err_code = load(lua_code)
+if fn_code then
+    fn_code()
+else
+    OnTextOverlay("`4[ERROR] `0Failed to load Lua code: " .. tostring(err_code))
+    logToConsole("[ERROR] Failed to load Lua code: " .. tostring(err_code))
 end
-
--- Load and run the Lua script
-local fn2, err2 = load(code)
-if not fn2 then
-    logError("Failed to load Lua code: " .. tostring(err2))
-    return
-end
-
-fn2()
