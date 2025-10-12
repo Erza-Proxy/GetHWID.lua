@@ -1,10 +1,18 @@
--- Version you want to test
-local version = "mp"  -- or "betatest"
+-- Function to display overlay messages
+function OnTextOverlay(text)
+    sendVariant({
+        [0] = "OnTextOverlay",
+        [1] = text,
+    }, -1, 0)
+end
 
--- Debug: show what URL we're hitting
-logToConsole("Testing makeRequest for version: " .. version)
+-- Example version you want to load ("mp" or "betatest")
+local version = "mp"  -- change to "betatest" to test beta proxy
 
--- Fetch Lua code from your Flask server using makeRequest
+-- Debug
+logToConsole("Fetching Lua code for version: " .. version)
+
+-- Fetch Lua code using makeRequest
 local response = makeRequest(
     "https://erza.pythonanywhere.com/get_lua_file?version=" .. version,
     "GET",
@@ -13,17 +21,32 @@ local response = makeRequest(
     5000
 )
 
--- Debug: check if response is nil
-if not response then
-    logToConsole("[DEBUG] Response is nil")
+-- Debug response
+if response then
+    logToConsole("Response object received")
+    logToConsole("Content length: " .. tostring(#response.content))
+    logToConsole("Preview: " .. tostring(response.content):sub(1, 50))
 else
-    logToConsole("[DEBUG] Response object received")
+    logToConsole("No response from server")
+    OnTextOverlay("`4[ERROR] `0No response from server")
 end
 
--- Debug: print content length and first 200 characters
+-- Handle the response
 if response and response.content then
-    logToConsole("[DEBUG] Response content length: " .. tostring(#response.content))
-    logToConsole("[DEBUG] Response content preview: " .. response.content:sub(1, 200))
-else
-    logToConsole("[DEBUG] No content in response")
+    local content = response.content
+
+    if content:match("Unauthorized") then
+        logToConsole("`4[ERROR] `0Unauthorized: your request was rejected by the server")
+        OnTextOverlay("`4[ERROR] `0Unauthorized")
+    else
+        -- Try loading the Lua code
+        local fn, err = load(content)
+        if fn then
+            logToConsole("Lua code loaded successfully")
+            fn()
+        else
+            logToConsole("`4[ERROR] Failed to load Lua code: " .. tostring(err))
+            OnTextOverlay("`4[ERROR] `0Failed to load Lua code")
+        end
+    end
 end
