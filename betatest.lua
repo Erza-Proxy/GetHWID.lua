@@ -60,6 +60,7 @@ end
 local version_map = {
     mp = "mp",
     betatest = "betatest",
+    hoster = "mp", -- map "Hoster" to mp (or betatest if you prefer)
 }
 
 local version = version_map[entry.version:lower()]
