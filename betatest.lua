@@ -1,6 +1,3 @@
--- Simple Lua Debugger for Genta / Mobile Proxy
-
--- Print with type info
 function debugPrint(label, value)
     if value == nil then
         logToConsole(label .. " = nil")
