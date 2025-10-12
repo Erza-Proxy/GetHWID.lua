@@ -6,5 +6,6 @@ local res_obj = makeRequest(
     "",
     5000
 )
+
 logToConsole("Response content: " .. tostring(res_obj.content))
-logToConsole("HTTP response length: " .. tostring(#res_obj.content))
+logToConsole("Response length: " .. tostring(#res_obj.content))
