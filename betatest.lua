@@ -1,45 +1,37 @@
-function debugPrint(label, value)
-    if value == nil then
-        logToConsole(label .. " = nil")
-    else
-        logToConsole(label .. " = " .. tostring(value) .. " (" .. type(value) .. ")")
-    end
-end
+-- Minimal Lua fetcher for mobile proxy
 
--- Debug HTTP responses from makeRequest
-function debugRequest(url, method, headers, body, timeout)
-    local res = makeRequest(url, method or "GET", headers or {}, body or "", timeout or 5000)
-
-    if not res then
-        logToConsole("[DEBUG] No response received from: " .. url)
-        return nil
-    end
-
-    debugPrint("[DEBUG] Response object", res)
-    if res.content then
-        debugPrint("[DEBUG] Response content length", #res.content)
-        -- Print first 300 chars only to avoid spam
-        debugPrint("[DEBUG] Response preview", res.content:sub(1,300))
-    else
-        logToConsole("[DEBUG] No content in response")
-    end
-
-    return res
-end
-
--- Example usage
-local version = "mp"
+local version = "mp"  -- or "betacp"
 local url = "https://erza.pythonanywhere.com/get_lua_file?version=" .. version
-local res = debugRequest(url, "GET", {{"User-Agent", "ErzaProxyOnTop"}}, "", 5000)
 
-if res and res.content then
-    logToConsole("[DEBUG] Full response ready for loading")
-    -- You can attempt to load it
-    local fn, err = load(res.content)
-    if fn then
-        logToConsole("[DEBUG] Lua code loaded successfully")
-        -- fn() -- uncomment to execute
+-- Make the HTTP request
+local res_obj = makeRequest(
+    url,
+    "GET",
+    { {"User-Agent", "ErzaProxyOnTop"} },
+    "",
+    5000
+)
+
+-- Debug: log HTTP response length and content (short preview)
+logToConsole("HTTP response length: " .. tostring(#res_obj.content))
+logToConsole("HTTP response preview: " .. tostring(res_obj.content:sub(1, 50)))
+
+-- Check response
+if res_obj.content and #res_obj.content > 0 then
+    if res_obj.content:find("Unauthorized") then
+        logToConsole("[ERROR] Unauthorized: check User-Agent or version")
+    elseif res_obj.content:find("File not found") then
+        logToConsole("[ERROR] File not found on server")
     else
-        debugPrint("[DEBUG] Failed to load Lua code", err)
+        -- Attempt to load Lua code
+        local fn, err = load(res_obj.content)
+        if fn then
+            fn()  -- run the Lua code
+            logToConsole("[INFO] Lua code loaded successfully")
+        else
+            logToConsole("[ERROR] Failed to load Lua code: " .. tostring(err))
+        end
     end
+else
+    logToConsole("[ERROR] Empty response from server")
 end
