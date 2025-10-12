@@ -1,4 +1,4 @@
--- Function to display overlay messages
+-- Display overlay messages
 function OnTextOverlay(text)
     sendVariant({
         [0] = "OnTextOverlay",
@@ -6,22 +6,27 @@ function OnTextOverlay(text)
     }, -1, 0)
 end
 
--- Example version you want to load ("mp" or "betatest")
-local version = "mp"  -- change to "betatest" to test beta proxy
+-- Example: mp or betatest
+local version = "mp"  -- change to "betatest" for beta proxy
 
 -- Debug
 logToConsole("Fetching Lua code for version: " .. version)
 
--- Fetch Lua code using makeRequest
+-- Build headers for makeRequest
+local headers = {
+    {"User-Agent", "ErzaProxyOnTop"}
+}
+
+-- Make the request
 local response = makeRequest(
     "https://erza.pythonanywhere.com/get_lua_file?version=" .. version,
     "GET",
-    { {"User-Agent", "ErzaProxyOnTop"} },
+    headers,
     "",
     5000
 )
 
--- Debug response
+-- Debug response object
 if response then
     logToConsole("Response object received")
     logToConsole("Content length: " .. tostring(#response.content))
@@ -36,10 +41,13 @@ if response and response.content then
     local content = response.content
 
     if content:match("Unauthorized") then
-        logToConsole("`4[ERROR] `0Unauthorized: your request was rejected by the server")
+        logToConsole("`4[ERROR] `0Unauthorized: server rejected your request")
         OnTextOverlay("`4[ERROR] `0Unauthorized")
+    elseif content:match("File not found") then
+        logToConsole("`4[ERROR] `0File not found on server")
+        OnTextOverlay("`4[ERROR] `0File not found")
     else
-        -- Try loading the Lua code
+        -- Attempt to load Lua code
         local fn, err = load(content)
         if fn then
             logToConsole("Lua code loaded successfully")
