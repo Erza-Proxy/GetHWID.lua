@@ -1,6 +1,3 @@
--- HWID.lua (converted from JSON)
--- Returns a table mapping HWID (string) -> { version = "...", expires = <number> }
-
 return {
     ["1"] = { version = "Hoster", expires = 1770900347412 },
     ["2"] = { version = "Hoster", expires = 1770900347412 },
