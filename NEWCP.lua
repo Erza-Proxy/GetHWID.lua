@@ -46,5 +46,9 @@ return {
     ["1337791319564877947"] = { hash = "<hash_here>", version = "mp", expires = 1762408837000 },
     ["1298675444790591584"] = { hash = "<hash_here>", version = "mp", expires = 1762408837000 },
     ["886090798419034123"]  = { hash = "<hash_here>", version = "mp", expires = 1762408837000 },
-    ["1077044380214493274"] = { hash = "0062bd35e31406b86315c1d7ccde8b99a2d55f04191a3b83634a18c9e3cf9796", version = "mp", expires = 9999999999999999 },
+    ["1077044380214493274"] = {
+    { hash = "0062bd35e31406b86315c1d7ccde8b99a2d55f04191a3b83634a18c9e3cf9796", version = "mp", expires = 1924991999000 },  -- 2030/12/31 UTC
+    { hash = "6f1af0c03eb93e8fdbddc5979cbac954794aafe8941d23a76af06ab42b2844d8", version = "mp", expires = 1924991999000 }   -- 2030/12/31 UTC
+    }
+
 }
