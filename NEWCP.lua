@@ -12,6 +12,7 @@ return {
     [""] = { discordid = "855260806794706956", version = "mp", expires = 1763080520000 },
     ["024e3231139f67c8235138081cc02c0d8ff6eb51c932b01db1ffd80dcb329e98"] = { discordid = "804224926167859240", version = "mp", expires = 1765843200000 },
     ["870b6dbe7f5b66ff38fcd713a556c9a5205563bd71e1954d3b099f2bc088c08c"] = { discordid = "1306582859477286954", version = "mp", expires = 1763164800000 },
+    ["3cad2529238ded0974a3879c16434dbf620f83b875d4124638608ae011e688f0"] = { discordid = "1306582859477286954", version = "mp", expires = 1763164800000 },
     [""] = { discordid = "927549202991546368", version = "mp", expires = 1765848000000 },
     [""] = { discordid = "748978979481845761", version = "mp", expires = 1762939067566 },
     [""] = { discordid = "546667801985810433", version = "mp", expires = 1770900347412 },
