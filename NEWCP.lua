@@ -12,7 +12,6 @@ return {
     [""] = { discordid = "855260806794706956", version = "mp", expires = 1763080520000 },
     [""] = { discordid = "804224926167859240", version = "mp", expires = 1765843200000 },
     [""] = { discordid = "1306582859477286954", version = "mp", expires = 1763164800000 },
-    [""] = { discordid = "1426559711087693896", version = "mp", expires = 1763011200000 },
     [""] = { discordid = "927549202991546368", version = "mp", expires = 1765848000000 },
     [""] = { discordid = "748978979481845761", version = "mp", expires = 1762939067566 },
     [""] = { discordid = "546667801985810433", version = "mp", expires = 1770900347412 },
