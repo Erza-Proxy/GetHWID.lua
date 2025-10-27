@@ -32,6 +32,7 @@ return {
     ["96bf39f90b6e983d2582cc8abe0ee3ca00d2df7714f7eecfc86bf889411db92b"] = { discordid = "1176124655761903720", version = "mp", expires = 1773562200970 },
     --//["6f4b7a05779f8030a6335b32d501db2817dc4ac9a323d4f37a90b6b28ca80d32"] = { discordid = "1203157625227714631", version = "mp", expires = 1763080340000 }, reselling proxy banned //--
     ["3"] = { discordid = "855260806794706956", version = "mp", expires = 1763080520000 },
+    ["d430bcbdbd70e63a5d7a82d95368f91c1ef5c941236a9ba8d072ccf9260ddf1a"] = { discordid = "804224926167859240" , version = "mp", expires = 1766793600000 },
     ["024e3231139f67c8235138081cc02c0d8ff6eb51c932b01db1ffd80dcb329e98"] = { discordid = "804224926167859240" , version = "mp", expires = 1765843200000 },
     ["870b6dbe7f5b66ff38fcd713a556c9a5205563bd71e1954d3b099f2bc088c08c"] = { discordid = "1306582859477286954", version = "mp", expires = 1763164800000 },
     ["3cad2529238ded0974a3879c16434dbf620f83b875d4124638608ae011e688f0"] = { discordid = "1306582859477286954", version = "mp", expires = 1763164800000 },
