@@ -34,7 +34,7 @@ return {
     ["1"] = { discordid = "1384492381323399262", version = "mp", expires = 1763251200000 },
     ["9b46b173d6c42a099aee752de6f682adad729b95d68123ed9bc5271b539c7a39"] = { discordid = "1073853554978205759", version = "mp", expires = 1763251200000 },
     ["2"] = { discordid = "1135401074933649591", version = "mp", expires = 1763126160000 },
-    ["96bf39f90b6e983d2582cc8abe0ee3ca00d2df7714f7eecfc86bf889411db92b"] = { discordid = "1176124655761903720", version = "mp", expires = 1773562200970 },
+    --["96bf39f90b6e983d2582cc8abe0ee3ca00d2df7714f7eecfc86bf889411db92b"] = { discordid = "1176124655761903720", version = "mp", expires = 1773562200970 },--
     --//["6f4b7a05779f8030a6335b32d501db2817dc4ac9a323d4f37a90b6b28ca80d32"] = { discordid = "1203157625227714631", version = "mp", expires = 1763080340000 }, reselling proxy banned //--
     ["3"] = { discordid = "855260806794706956", version = "mp", expires = 1763080520000 },
     ["d430bcbdbd70e63a5d7a82d95368f91c1ef5c941236a9ba8d072ccf9260ddf1a"] = { discordid = "804224926167859240" , version = "mp", expires = 1766793600000 },
@@ -43,7 +43,7 @@ return {
     ["3cad2529238ded0974a3879c16434dbf620f83b875d4124638608ae011e688f0"] = { discordid = "1306582859477286954", version = "mp", expires = 1763164800000 },
     ["8bcf11c73897202acf4aae4c2ddbee9c197fd964a2b64d505d1a14e9ff69b2d2"] = { discordid = "927549202991546368" , version = "mp", expires = 1765848000000 },
     ["a63edd931927d83eae1c526d98908afecaa986c1e667aab90b71165fb81d8e6b"] = { discordid = "748978979481845761" , version = "mp", expires = 1762939067566 },
-    ["c271d3b1fdc2b0294c5707332ce34a99356a15832c16ff79344089fdb0177adc"] = { discordid = "546667801985810433" , version = "mp", expires = 1770900347412 },
+    --["c271d3b1fdc2b0294c5707332ce34a99356a15832c16ff79344089fdb0177adc"] = { discordid = "546667801985810433" , version = "mp", expires = 1770900347412 },--
     ["40ee3906474603a69a16253239be7dc168c8f2547fc8c29efdb52c25067c2c36"] = { discordid = "1420270596377415752", version = "mp", expires = 1762608527736 },
     ["5"] = { discordid = "1209845008027357215", version = "mp", expires = 1765198930714 },
     ["69326c0ef9ba99ff5ee12bd2e4466a1868e42a6c139dc2a294e7ca1eb6de1ed6"] = { discordid = "1166683397494685770", version = "mp", expires = 1762408837000 },
